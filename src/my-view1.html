@@ -1,0 +1,81 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view1">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+    </style>
+
+    <!--<div class="card">
+      <div class="circle">1</div>
+      <h1>RSS Feed </h1>
+      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
+      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      
+      <paper-button on-click="confirmClick">Confirm</paper-button>
+      
+    </div>-->
+    
+    <div id="feed">
+    </div>
+
+  
+  </template>
+  
+
+  <script>
+		
+	window.global = "";	
+		
+    Polymer({
+      is: 'my-view1',
+	  ready: function() {
+
+		var feed = new google.feeds.Feed("http://www.engadget.com/rss-full.xml");
+		feed.setNumEntries(20);
+		  feed.load(function(result) {
+			if (!result.error) {
+			  console.log(result.feed.entries.length);
+			  for (var i = 0; i < result.feed.entries.length; i++) {
+				var entry = result.feed.entries[i];
+				window.global += "<div class=\"card\">";
+				window.global += "<h1>" + entry.title + "</h1>";
+				window.global += "<div class=\"datepub\">" + entry.publishedDate + "</div>";
+				//window.global += "<div class=\"contentfeed\">" + entry.contentSnippet + "</div>";
+				window.global += "<div class=\"contentfeed\">" + entry.content + "</div>";
+				window.global += "<a href=\"" + entry.link + "\" target=\"_blank\">" + entry.link + "</a>";
+				window.global += "</div>";
+			  }
+			}
+		  });
+		  setTimeout(function() {
+			Polymer.dom(this.$.feed).innerHTML = window.global;
+		  }.bind(this), 500);
+
+	  },
+	  confirmClick: function(event){
+            //console.log(window.global);
+			//Polymer.dom(this.$.feed).innerHTML = window.global;
+      }
+	  
+    });
+
+
+  </script>
+</dom-module>
